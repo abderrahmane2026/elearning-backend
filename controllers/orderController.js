@@ -3,12 +3,12 @@ const Order = require("../models/orderModel");
 // submit a new order
 const submitOrder = async (req, res) => {
   try {
-    const { name, email, adress, phone, paymentMethod } = req.body;
+    const { name, email, address, phone, paymentMethod } = req.body; // Corrected from 'adress' to 'address'
 
     const order = new Order({
       name,
       email,
-      Adress: adress,
+      Adress: address,
       phoneNumber: phone,
       paymentMethod: paymentMethod,
     });
