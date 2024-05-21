@@ -10,7 +10,7 @@ const orderSchema = new Schema({
   cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cart",
-    required: true,
+    // required: true,
   },
   email: {
     type: String,
