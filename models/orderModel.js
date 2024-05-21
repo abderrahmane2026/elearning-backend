@@ -28,6 +28,7 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
+  status: String,
 });
 
 const Order = mongoose.model("Order", orderSchema);
