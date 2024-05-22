@@ -16,7 +16,8 @@ const calculateTotalPrice = async (products) => {
 
 // Add product to cart function
 const addProduct = async (req, res) => {
-  const { productId, quantity } = req.body;
+  const { productId } = req.params;
+  const quantity = 1;
   const clientId = req.params.clientId;
 
   if (!mongoose.Types.ObjectId.isValid(productId)) {
@@ -64,4 +65,47 @@ const addProduct = async (req, res) => {
   }
 };
 
-module.exports = { addProduct };
+// Get cart for a specific client
+const getCart = async (req, res) => {
+  const { clientId } = req.params;
+
+  try {
+    const cart = await Cart.findOne({ clientID: clientId });
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// clear the cart
+const clearCart = async (req, res) => {
+  const { clientId } = req.params; // Getting clientId from the request params
+
+  try {
+    // Find the cart for the client
+    let cart = await Cart.findOne({ clientID: clientId });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    // Clear the cart by setting products to an empty array and total price to 0
+    cart.products = [];
+    cart.totalPrice = 0;
+
+    // Save the updated cart
+    await cart.save();
+
+    res.status(200).json({ message: "Cart cleared successfully", cart });
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while clearing the cart" });
+  }
+};
+
+module.exports = { addProduct, getCart, clearCart };
