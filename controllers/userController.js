@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const createToken = require("../middlewares/token");
+const { default: mongoose } = require("mongoose");
 
 // login function
 const loginUser = async (req, res) => {
@@ -26,7 +27,7 @@ const loginUser = async (req, res) => {
 
     const token = createToken(user._id);
 
-    res.json({ message: "logged in successfuly", token });
+    res.json({ message: "logged in successfuly", token, user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -49,15 +50,16 @@ const upload = multer({ storage: storage });
 // signup function
 const signupUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     // const fileName = req.file.filename;
-    // const basepath = `${req.protocol}://${req.get("host")}/public/images/`;
+    // const basepath = ${req.protocol}://${req.get("host")}/public/images/;
     const user = new User({
       name,
       email,
       password: hashedPassword,
-      // avatar: `${basepath}${fileName}`,
+      role,
+      // avatar: ${basepath}${fileName},
     });
     await user.save();
 
@@ -75,9 +77,26 @@ const getUsers = async (req, res) => {
   res.status(200).json(Users);
 };
 
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(404).json({ error: "no such product" });
+  }
+
+  const user = await User.findByIdAndDelete(id);
+
+  if (!user) {
+    res.status(404).json({ error: "no such product" });
+  }
+
+  res.status(200).json({ message: "User deleted successfuly" });
+};
+
 module.exports = {
   loginUser,
   signupUser,
   getUsers,
+  deleteUser,
   upload,
 };
