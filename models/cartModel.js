@@ -22,6 +22,9 @@ const cartSchema = new Schema({
     require: true,
     default: 0,
   },
+  user: {
+    type: mongoose.Types.ObjectId,
+  },
 });
 
 const Cart = mongoose.model("Cart", cartSchema);
