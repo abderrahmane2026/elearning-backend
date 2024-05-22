@@ -7,11 +7,7 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
-  cart: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Cart",
-    // required: true,
-  },
+  cart: String,
   email: {
     type: String,
     required: true,

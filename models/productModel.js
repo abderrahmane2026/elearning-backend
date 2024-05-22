@@ -12,6 +12,7 @@ const productSchema = new Schema(
     review: String,
     company: String,
     category: String,
+    sellerId: String,
   },
   {
     timestamps: true,

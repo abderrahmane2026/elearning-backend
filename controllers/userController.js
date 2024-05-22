@@ -4,6 +4,7 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const createToken = require("../middlewares/token");
 const { default: mongoose } = require("mongoose");
+const Cart = require("../models/cartModel");
 
 // login function
 const loginUser = async (req, res) => {
@@ -63,9 +64,19 @@ const signupUser = async (req, res) => {
     });
     await user.save();
 
+    const cart = new Cart({
+      products: [],
+      totalPrice: 0,
+      clientID: user._id,
+    });
+
+    await cart.save();
+
     const token = createToken(user._id);
 
-    res.status(200).json({ message: "user created successfully", user, token });
+    res
+      .status(200)
+      .json({ message: "user created successfully", user, token, cart });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

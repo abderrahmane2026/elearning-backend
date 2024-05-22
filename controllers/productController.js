@@ -42,8 +42,16 @@ const upload = multer({ storage: storage });
 // create a product
 const createProduct = async (req, res) => {
   try {
-    const { name, description, price, quantity, review, company, category } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      quantity,
+      review,
+      company,
+      category,
+      sellerId,
+    } = req.body;
     const fileName = req.file.filename;
     const basepath = `${req.protocol}://${req.get("host")}/public/images/`;
 
@@ -57,6 +65,7 @@ const createProduct = async (req, res) => {
       review,
       company,
       category,
+      sellerId,
     });
 
     // Save the product to the database
