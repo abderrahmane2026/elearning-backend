@@ -8,6 +8,7 @@ const productRoutes = require("./routes/products");
 const userRoutes = require("./routes/user");
 const orderRoutes = require("./routes/order");
 const cartRoutes = require("./routes/cart");
+const contactRoutes = require("./routes/contact");
 const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors");
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 app.use("/api/products", productRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/order", orderRoutes);
+app.use("/api/contact", contactRoutes);
 app.use("/api/cart", cartRoutes);
 
 // connecting to db

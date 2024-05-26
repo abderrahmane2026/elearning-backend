@@ -104,10 +104,142 @@ const deleteUser = async (req, res) => {
   res.status(200).json({ message: "User deleted successfuly" });
 };
 
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Invalid user ID" });
+  }
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  res.status(200).json(user);
+};
+
+// Update user profile
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const { userId } = req.params; // Use userId instead of id
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { name, email },
+      { new: true }
+    );
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const updatePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    // const userId = req.user._id; // Assuming req.user contains the authenticated user's details
+    const { userId } = req.params;
+    // Fetch the user from the database
+    const user = await User.findById(userId);
+
+    // Verify current password
+    const validPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ error: "Current password is incorrect" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password
+    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// to update the extra info
+const updateUserProfile = async (req, res) => {
+  try {
+    const { phoneNumber, address, dateOfBirth } = req.body;
+    const userId = req.params.userId;
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update user profile fields
+    user.phoneNumber = phoneNumber || user.phoneNumber;
+    user.address = address || user.address;
+    user.dateOfBirth = dateOfBirth || user.dateOfBirth;
+
+    // If avatar is provided, update it
+    if (req.file) {
+      const avatarPath = req.file.path;
+      user.avatar = avatarPath;
+    }
+
+    // Save updated user data
+    await user.save();
+
+    res
+      .status(200)
+      .json({ message: "User profile updated successfully", user });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+const acceptSeller = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { sellerStatus: "accepted" },
+      { new: true }
+    );
+    res.status(200).json({ message: "Seller request accepted", user });
+  } catch (error) {
+    console.error("Error accepting seller request:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const refuseSeller = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { sellerStatus: "refused" },
+      { new: true }
+    );
+    res.status(200).json({ message: "Seller request refused", user });
+  } catch (error) {
+    console.error("Error refusing seller request:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   loginUser,
   signupUser,
   getUsers,
   deleteUser,
+  getUserById,
+  updateProfile,
+  updatePassword,
   upload,
+  updateUserProfile,
+  acceptSeller,
+  refuseSeller,
 };

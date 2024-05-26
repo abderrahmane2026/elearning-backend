@@ -12,6 +12,10 @@ const productSchema = new Schema(
     review: String,
     company: String,
     category: String,
+    status: {
+      type: String,
+      default: "noted",
+    },
     sellerId: String,
   },
   {

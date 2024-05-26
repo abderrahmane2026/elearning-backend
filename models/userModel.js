@@ -11,6 +11,10 @@ const userSchema = new Schema({
   avatar: String,
   dateOfBirth: Date,
   role: String,
+  sellerStatus: {
+    type: String,
+    default: "requested",
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

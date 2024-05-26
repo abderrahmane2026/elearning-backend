@@ -116,11 +116,82 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// get product by seller id
+const getProductsBySellerID = async (req, res) => {
+  const { sellerId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(sellerId)) {
+    return res.status(404).json({ error: "Invalid Seller ID" });
+  }
+
+  try {
+    const products = await Product.find({ sellerId });
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Accept a product
+const acceptProduct = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Invalid Product ID" });
+  }
+
+  try {
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { status: "accepted" },
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product accepted successfully", product });
+  } catch (error) {
+    console.error("Error accepting product:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Delete a product
+const refuseProduct = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Invalid Product ID" });
+  }
+
+  try {
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { status: "refused" },
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product refused successfully", product });
+  } catch (error) {
+    console.error("Error refusing product:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
   deleteProduct,
   updateProduct,
+  getProductsBySellerID,
+  acceptProduct,
+  refuseProduct,
   upload,
 };
