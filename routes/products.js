@@ -26,8 +26,9 @@ router.get("/seller/:sellerId", getProductsBySellerID);
 router.post("/", upload.single("image"), createProduct);
 
 // DELETE a workout
-router.delete("/:id", deleteProduct);
 
+
+router.delete("/delete/:productId", deleteProduct); // Delete product
 // UPDATE a workout
 router.patch("/:id", updateProduct);
 

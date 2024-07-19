@@ -77,21 +77,18 @@ const createProduct = async (req, res) => {
   }
 };
 
-// Delete Product
+// Delete product
 const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such Product" });
+  try {
+    const { productId } = req.params;
+    await Product.findByIdAndDelete(productId);
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  const product = await Product.findByIdAndDelete(id);
-
-  if (!product) {
-    return res.status(404).json({ error: "No such Product" });
-  }
-
-  res.status(200).json(product);
 };
+
+
 
 // Update a Product
 const updateProduct = async (req, res) => {

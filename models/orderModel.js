@@ -25,6 +25,18 @@ const orderSchema = new Schema({
     required: true,
   },
   status: String,
+  sellerId: String,
+  userId: String,
+  duration:{
+    type: String,
+    required: true,
+  },
+  
+  startTime:{
+        type: String,
+        required: true,
+  },
+ 
 });
 
 const Order = mongoose.model("Order", orderSchema);

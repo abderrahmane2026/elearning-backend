@@ -3,9 +3,10 @@ const Contact = require("../models/contactModel");
 // submit a new contact message
 const submitContact = async (req, res) => {
   try {
-    const { email, subject, message } = req.body;
+    const {name, email, subject, message } = req.body;
 
     const contact = new Contact({
+      name,
       email,
       subject,
       message,
@@ -27,4 +28,15 @@ const getContactMessages = async (req, res) => {
 
   res.status(200).json(contact);
 };
-module.exports = { submitContact, getContactMessages };
+// delete a contact message
+const deleteContactMessage = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    await Contact.findByIdAndDelete(messageId);
+    res.status(200).json({ message: "Contact message deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { submitContact, getContactMessages,deleteContactMessage };
