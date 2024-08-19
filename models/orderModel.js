@@ -24,19 +24,17 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
-  status: String,
-  sellerId: String,
-  userId: String,
-  duration:{
-    type: String,
-    required: true,
-  },
+
   
-  startTime:{
-        type: String,
-        required: true,
-  },
- 
+  status: { type: String, default: "pending" },
+  catigory: String,
+  userId: String,
+  nameofchois: String,
+  
+  cv: {
+    type: String, // Store the path to the uploaded CV file
+    required: true,
+  }, // حقل جديد لحفظ مسار ملف السيرة الذاتية
 });
 
 const Order = mongoose.model("Order", orderSchema);

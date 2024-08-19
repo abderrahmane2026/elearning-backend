@@ -200,7 +200,7 @@ const updateUserProfile = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-const acceptSeller = async (req, res) => {
+const acceptMr = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await User.findByIdAndUpdate(
@@ -208,14 +208,14 @@ const acceptSeller = async (req, res) => {
       { sellerStatus: "accepted" },
       { new: true }
     );
-    res.status(200).json({ message: "Seller request accepted", user });
+    res.status(200).json({ message: "professor request accepted", user });
   } catch (error) {
-    console.error("Error accepting seller request:", error);
+    console.error("Error accepting professor request:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-const refuseSeller = async (req, res) => {
+const refuseMr = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await User.findByIdAndUpdate(
@@ -223,13 +223,28 @@ const refuseSeller = async (req, res) => {
       { sellerStatus: "refused" },
       { new: true }
     );
-    res.status(200).json({ message: "Seller request refused", user });
+    res.status(200).json({ message: "professor request refused", user });
   } catch (error) {
-    console.error("Error refusing seller request:", error);
+    console.error("Error refusing professor request:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user._id; // Assuming you have user ID in req.user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 module.exports = {
   loginUser,
   signupUser,
@@ -240,6 +255,7 @@ module.exports = {
   updatePassword,
   upload,
   updateUserProfile,
-  acceptSeller,
-  refuseSeller,
+  acceptMr,
+  refuseMr,
+  getCurrentUser
 };

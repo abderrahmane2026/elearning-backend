@@ -1,51 +1,51 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middlewares/upload"); // تأكد من مسار ملف upload
 const {
   loginUser,
   signupUser,
   getUsers,
-  upload,
   deleteUser,
   getUserById,
   updateProfile,
   updatePassword,
   updateUserProfile,
-  acceptSeller,
-  refuseSeller,
+  acceptMr,
+  refuseMr,
+  getCurrentUser,
+  
 } = require("../controllers/userController");
 
-//login route
+// مسار تسجيل الدخول
 router.post("/login", loginUser);
 
-//signup route
+// مسار التسجيل
 router.post("/signup", upload.single("avatar"), signupUser);
 
-//get all the users
+// الحصول على جميع المستخدمين
 router.get("/", getUsers);
 
-//get a single user
+// الحصول على مستخدم واحد
 router.get("/:id", getUserById);
 
-// delete a user
+// حذف مستخدم
 router.delete("/:id", deleteUser);
 
-// updateProfile
+// تحديث الملف الشخصي
 router.put("/:userId/updateProfile", updateProfile);
 
-// update Password
+// تحديث كلمة المرور
 router.put("/:userId/updatePassword", updatePassword);
 
-// add the extra info
-router.put(
-  "/:userId/updateUserProfile",
-  upload.single("avatar"),
-  updateUserProfile
-);
+// تحديث المعلومات الإضافية
+router.put("/:userId/updateUserProfile", upload.single("avatar"), updateUserProfile);
 
-// Route to accept seller request
-router.put("/:id/accept", acceptSeller);
+// قبول طلب البائع
+router.put("/:id/accept", acceptMr);
 
-// Route to refuse seller request
-router.put("/:id/refuse", refuseSeller);
+// رفض طلب البائع
+router.put("/:id/refuse", refuseMr);
+
+router.get("/current",  getCurrentUser);
 
 module.exports = router;
