@@ -10,6 +10,7 @@ const {
   getAllCourseOrders,
   getAllCompanyOrders,
   getAllLectures,
+  rejectedOrder,
   uploadcv, // استيراد `upload` من وحدة التحكم
 } = require("../controllers/orderController");
 
@@ -18,6 +19,7 @@ router.post("/submit", uploadcv.single('cv'), submitOrder); // Submit a new orde
 router.get("/seller/:sellerId", getOrdersBySeller); // Fetch orders by seller ID
 router.put("/delete/:orderId", deleteOrder); // Delete order
 router.put("/accept/:orderId", acceptOrder); // Accept order
+router.put("/rejected/:orderId", rejectedOrder);
 router.get("/user/:userId", getOrdersByUser); // Fetch orders by user ID
 router.get("/all", getAllOrders); // Fetch all orders
 router.get("/course-orders", getAllCourseOrders); // Fetch all orders with category "Course"

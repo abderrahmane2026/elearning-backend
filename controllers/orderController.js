@@ -97,6 +97,21 @@ const acceptOrder = async (req, res) => {
   }
 };
 
+const rejectedOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    order.status = "rejected"; // تحديث حالة الطلب إلى "مقبول"
+    await order.save();
+    res.status(200).json({ message: "Order rejected successfully", status: order.status });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 // Fetch all orders with category "Course"
 const getAllCourseOrders = async (req, res) => {
@@ -127,4 +142,4 @@ const getAllLectures = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-module.exports = { submitOrder, getOrdersBySeller, deleteOrder, acceptOrder, getOrdersByUser, getAllOrders, getAllCourseOrders, getAllCompanyOrders,getAllLectures, uploadcv };
+module.exports = { rejectedOrder,submitOrder, getOrdersBySeller, deleteOrder, acceptOrder, getOrdersByUser, getAllOrders, getAllCourseOrders, getAllCompanyOrders,getAllLectures, uploadcv };
