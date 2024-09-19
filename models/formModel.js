@@ -13,8 +13,8 @@ const studentSchema = new Schema({
   },
   registrationNumber: {
     type: String,
-    required: true,
-    unique: true,
+   
+  
   },
   address: {
     type: String,
@@ -49,6 +49,14 @@ const studentSchema = new Schema({
   },
   institutionAddress: {
     type: String,
+  },
+  userId:{
+    type:String,
+
+  },
+  companyName:{
+    type:String,
+    
   },
   cv: {
     type: String, // Store the path to the uploaded CV file

@@ -16,6 +16,8 @@ exports.createStudent = async (req, res) => {
       status: req.body.status,
       institutionName: req.body.institutionName,
       institutionAddress: req.body.institutionAddress,
+      userId:req.body.userId,
+      companyName:req.body.companyName,
       cv: req.file.path, // تخزين مسار ملف السيرة الذاتية
     });
 
